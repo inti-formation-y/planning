@@ -1,0 +1,36 @@
+{
+    "name": "Cours",
+    "fields": [
+        {
+            "fieldName": "titre",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "dateAjout",
+            "fieldType": "ZonedDateTime",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "eleve",
+            "otherEntityRelationshipName": "cours",
+            "relationshipName": "eleve",
+            "otherEntityField": "nom",
+            "ownerSide": true
+        }
+    ],
+    "changelogDate": "20200319012000",
+    "entityTableName": "cours",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "readOnly": false,
+    "clientRootFolder": "",
+    "applications": "*"
+}
