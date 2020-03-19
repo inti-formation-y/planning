@@ -1,0 +1,30 @@
+{
+  "planningApp": {
+    "eleve": {
+      "home": {
+        "title": "Eleves",
+        "createLabel": "Eleve を追加",
+        "createOrEditLabel": "Eleveを追加または編集",
+        "notFound": "No Eleves found"
+      },
+      "created": "A new Eleve is created with identifier {{ param }}",
+      "updated": "A Eleve is updated with identifier {{ param }}",
+      "deleted": "A Eleve is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Eleve {{ id }}を削除してもよろしいですか？"
+      },
+      "detail": {
+        "title": "Eleve"
+      },
+      "photo": "Photo",
+      "nom": "Nom",
+      "prenom": "Prenom",
+      "adresse": "Adresse",
+      "email": "Email",
+      "mobile": "Mobile",
+      "dateNaissance": "Date Naissance",
+      "classe": "Classe",
+      "cours": "Cours"
+    }
+  }
+}

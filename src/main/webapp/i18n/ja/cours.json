@@ -1,0 +1,24 @@
+{
+  "planningApp": {
+    "cours": {
+      "home": {
+        "title": "Cours",
+        "createLabel": "Cours を追加",
+        "createOrEditLabel": "Coursを追加または編集",
+        "notFound": "No Cours found"
+      },
+      "created": "A new Cours is created with identifier {{ param }}",
+      "updated": "A Cours is updated with identifier {{ param }}",
+      "deleted": "A Cours is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Cours {{ id }}を削除してもよろしいですか？"
+      },
+      "detail": {
+        "title": "Cours"
+      },
+      "titre": "Titre",
+      "dateAjout": "Date Ajout",
+      "eleve": "Eleve"
+    }
+  }
+}

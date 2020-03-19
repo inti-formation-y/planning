@@ -1,0 +1,25 @@
+{
+    "name": "Video",
+    "fields": [
+        {
+            "fieldName": "titre",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "contenu",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "any"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20200319012100",
+    "entityTableName": "video",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "readOnly": false,
+    "clientRootFolder": "",
+    "applications": "*"
+}

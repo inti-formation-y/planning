@@ -1,0 +1,23 @@
+{
+  "planningApp": {
+    "video": {
+      "home": {
+        "title": "Videos",
+        "createLabel": "Video を追加",
+        "createOrEditLabel": "Videoを追加または編集",
+        "notFound": "No Videos found"
+      },
+      "created": "A new Video is created with identifier {{ param }}",
+      "updated": "A Video is updated with identifier {{ param }}",
+      "deleted": "A Video is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Video {{ id }}を削除してもよろしいですか？"
+      },
+      "detail": {
+        "title": "Video"
+      },
+      "titre": "Titre",
+      "contenu": "Contenu"
+    }
+  }
+}
