@@ -26,5 +26,4 @@ public interface CoursRepository extends JpaRepository<Cours, Long> {
 
     @Query("select cours from Cours cours left join fetch cours.eleves where cours.id =:id")
     Optional<Cours> findOneWithEagerRelationships(@Param("id") Long id);
-
 }

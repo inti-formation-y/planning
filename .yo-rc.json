@@ -27,7 +27,7 @@
     "languages": ["en", "ja", "fr"],
     "clientFramework": "angularX",
     "jhiPrefix": "jhi",
-    "jhipsterVersion": "6.7.1",
+    "jhipsterVersion": "6.8.0",
     "jwtSecretKey": "YzQ4ODIyNTkxODNlZDdjMGFkMTBmNTY3YTQzOGM1ZjU4NzZlNjIxMjIwYmI0MmVlY2FjMDc1NDk3MDhiMTNkZWUzYTdkZmMzZGQ4MzJiMjUyMzU5ZGNlYTE2MDA1NjhlNzI2MGQ1YmRmOWZkZDg2MTQ5NTU4ZWM5ZTk3OTAxODk=",
     "embeddableLaunchScript": false,
     "clientTheme": "none",
