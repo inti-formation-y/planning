@@ -1,6 +1,7 @@
 package fr.formation.inti.repository;
 
 import fr.formation.inti.PlanningApp;
+
 import fr.formation.inti.config.Constants;
 import fr.formation.inti.config.audit.AuditEventConverter;
 import fr.formation.inti.domain.PersistentAuditEvent;

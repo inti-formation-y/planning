@@ -3,28 +3,22 @@ package fr.formation.inti.web.rest;
 import fr.formation.inti.PlanningApp;
 import fr.formation.inti.domain.Eleve;
 import fr.formation.inti.repository.EleveRepository;
-import fr.formation.inti.web.rest.errors.ExceptionTranslator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
-import org.springframework.validation.Validator;
-
 import javax.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static fr.formation.inti.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -35,6 +29,9 @@ import fr.formation.inti.domain.enumeration.Classe;
  * Integration tests for the {@link EleveResource} REST controller.
  */
 @SpringBootTest(classes = PlanningApp.class)
+
+@AutoConfigureMockMvc
+@WithMockUser
 public class EleveResourceIT {
 
     private static final byte[] DEFAULT_PHOTO = TestUtil.createByteArray(1, "0");
@@ -67,35 +64,12 @@ public class EleveResourceIT {
     private EleveRepository eleveRepository;
 
     @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restEleveMockMvc;
 
     private Eleve eleve;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final EleveResource eleveResource = new EleveResource(eleveRepository);
-        this.restEleveMockMvc = MockMvcBuilders.standaloneSetup(eleveResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -148,7 +122,7 @@ public class EleveResourceIT {
 
         // Create the Eleve
         restEleveMockMvc.perform(post("/api/eleves")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(eleve)))
             .andExpect(status().isCreated());
 
@@ -177,7 +151,7 @@ public class EleveResourceIT {
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restEleveMockMvc.perform(post("/api/eleves")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(eleve)))
             .andExpect(status().isBadRequest());
 
@@ -263,7 +237,7 @@ public class EleveResourceIT {
             .classe(UPDATED_CLASSE);
 
         restEleveMockMvc.perform(put("/api/eleves")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(updatedEleve)))
             .andExpect(status().isOk());
 
@@ -291,7 +265,7 @@ public class EleveResourceIT {
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restEleveMockMvc.perform(put("/api/eleves")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(eleve)))
             .andExpect(status().isBadRequest());
 
@@ -310,7 +284,7 @@ public class EleveResourceIT {
 
         // Delete the eleve
         restEleveMockMvc.perform(delete("/api/eleves/{id}", eleve.getId())
-            .accept(TestUtil.APPLICATION_JSON))
+            .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

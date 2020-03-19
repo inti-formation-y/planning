@@ -3,24 +3,21 @@ package fr.formation.inti.web.rest;
 import fr.formation.inti.PlanningApp;
 import fr.formation.inti.domain.Cours;
 import fr.formation.inti.repository.CoursRepository;
-import fr.formation.inti.web.rest.errors.ExceptionTranslator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
 import javax.persistence.EntityManager;
 import java.time.Instant;
 import java.time.ZonedDateTime;
@@ -30,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static fr.formation.inti.web.rest.TestUtil.sameInstant;
-import static fr.formation.inti.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.Mockito.*;
@@ -41,6 +37,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Integration tests for the {@link CoursResource} REST controller.
  */
 @SpringBootTest(classes = PlanningApp.class)
+@ExtendWith(MockitoExtension.class)
+@AutoConfigureMockMvc
+@WithMockUser
 public class CoursResourceIT {
 
     private static final String DEFAULT_TITRE = "AAAAAAAAAA";
@@ -56,35 +55,12 @@ public class CoursResourceIT {
     private CoursRepository coursRepositoryMock;
 
     @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restCoursMockMvc;
 
     private Cours cours;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final CoursResource coursResource = new CoursResource(coursRepository);
-        this.restCoursMockMvc = MockMvcBuilders.standaloneSetup(coursResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -123,7 +99,7 @@ public class CoursResourceIT {
 
         // Create the Cours
         restCoursMockMvc.perform(post("/api/cours")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(cours)))
             .andExpect(status().isCreated());
 
@@ -145,7 +121,7 @@ public class CoursResourceIT {
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restCoursMockMvc.perform(post("/api/cours")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(cours)))
             .andExpect(status().isBadRequest());
 
@@ -165,7 +141,7 @@ public class CoursResourceIT {
         // Create the Cours, which fails.
 
         restCoursMockMvc.perform(post("/api/cours")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(cours)))
             .andExpect(status().isBadRequest());
 
@@ -193,14 +169,8 @@ public class CoursResourceIT {
         CoursResource coursResource = new CoursResource(coursRepositoryMock);
         when(coursRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
-        MockMvc restCoursMockMvc = MockMvcBuilders.standaloneSetup(coursResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build();
-
         restCoursMockMvc.perform(get("/api/cours?eagerload=true"))
-        .andExpect(status().isOk());
+            .andExpect(status().isOk());
 
         verify(coursRepositoryMock, times(1)).findAllWithEagerRelationships(any());
     }
@@ -208,17 +178,12 @@ public class CoursResourceIT {
     @SuppressWarnings({"unchecked"})
     public void getAllCoursWithEagerRelationshipsIsNotEnabled() throws Exception {
         CoursResource coursResource = new CoursResource(coursRepositoryMock);
-            when(coursRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-            MockMvc restCoursMockMvc = MockMvcBuilders.standaloneSetup(coursResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build();
+        when(coursRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         restCoursMockMvc.perform(get("/api/cours?eagerload=true"))
-        .andExpect(status().isOk());
+            .andExpect(status().isOk());
 
-            verify(coursRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+        verify(coursRepositoryMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
@@ -261,7 +226,7 @@ public class CoursResourceIT {
             .dateAjout(UPDATED_DATE_AJOUT);
 
         restCoursMockMvc.perform(put("/api/cours")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(updatedCours)))
             .andExpect(status().isOk());
 
@@ -282,7 +247,7 @@ public class CoursResourceIT {
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restCoursMockMvc.perform(put("/api/cours")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(cours)))
             .andExpect(status().isBadRequest());
 
@@ -301,7 +266,7 @@ public class CoursResourceIT {
 
         // Delete the cours
         restCoursMockMvc.perform(delete("/api/cours/{id}", cours.getId())
-            .accept(TestUtil.APPLICATION_JSON))
+            .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

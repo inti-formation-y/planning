@@ -3,26 +3,20 @@ package fr.formation.inti.web.rest;
 import fr.formation.inti.PlanningApp;
 import fr.formation.inti.domain.Video;
 import fr.formation.inti.repository.VideoRepository;
-import fr.formation.inti.web.rest.errors.ExceptionTranslator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
-import org.springframework.validation.Validator;
-
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static fr.formation.inti.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -32,6 +26,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Integration tests for the {@link VideoResource} REST controller.
  */
 @SpringBootTest(classes = PlanningApp.class)
+
+@AutoConfigureMockMvc
+@WithMockUser
 public class VideoResourceIT {
 
     private static final String DEFAULT_TITRE = "AAAAAAAAAA";
@@ -46,35 +43,12 @@ public class VideoResourceIT {
     private VideoRepository videoRepository;
 
     @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restVideoMockMvc;
 
     private Video video;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final VideoResource videoResource = new VideoResource(videoRepository);
-        this.restVideoMockMvc = MockMvcBuilders.standaloneSetup(videoResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -115,7 +89,7 @@ public class VideoResourceIT {
 
         // Create the Video
         restVideoMockMvc.perform(post("/api/videos")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(video)))
             .andExpect(status().isCreated());
 
@@ -138,7 +112,7 @@ public class VideoResourceIT {
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restVideoMockMvc.perform(post("/api/videos")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(video)))
             .andExpect(status().isBadRequest());
 
@@ -206,7 +180,7 @@ public class VideoResourceIT {
             .contenuContentType(UPDATED_CONTENU_CONTENT_TYPE);
 
         restVideoMockMvc.perform(put("/api/videos")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(updatedVideo)))
             .andExpect(status().isOk());
 
@@ -228,7 +202,7 @@ public class VideoResourceIT {
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restVideoMockMvc.perform(put("/api/videos")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(video)))
             .andExpect(status().isBadRequest());
 
@@ -247,7 +221,7 @@ public class VideoResourceIT {
 
         // Delete the video
         restVideoMockMvc.perform(delete("/api/videos/{id}", video.getId())
-            .accept(TestUtil.APPLICATION_JSON))
+            .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

@@ -15,7 +15,7 @@
                 <dt><span jhiTranslate="planningApp.video.contenu">Contenu</span></dt>
                 <dd>
                     <div *ngIf="video.contenu">
-                        <a (click)="openFile(video.contenuContentType!, video.contenu)" jhiTranslate="entity.action.open">open</a>
+                        <a (click)="openFile(video?.contenuContentType!, video?.contenu)" jhiTranslate="entity.action.open">open</a>
                         {{ video.contenuContentType }}, {{ byteSize(video.contenu) }}
                     </div>
                 </dd>

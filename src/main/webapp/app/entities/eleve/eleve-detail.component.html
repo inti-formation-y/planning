@@ -11,7 +11,7 @@
                 <dt><span jhiTranslate="planningApp.eleve.photo">Photo</span></dt>
                 <dd>
                     <div *ngIf="eleve.photo">
-                        <a (click)="openFile(eleve.photoContentType!, eleve.photo)">
+                        <a (click)="openFile(eleve?.photoContentType!, eleve?.photo)">
                             <img [src]="'data:' + eleve.photoContentType + ';base64,' + eleve.photo" style="max-width: 100%;" alt="eleve image"/>
                         </a>
                         {{ eleve.photoContentType }}, {{ byteSize(eleve.photo) }}
