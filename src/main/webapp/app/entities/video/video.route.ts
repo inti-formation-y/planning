@@ -39,7 +39,7 @@ export const videoRoute: Routes = [
     path: '',
     component: VideoComponent,
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.USER,Authority.ELEVE],
       pageTitle: 'planningApp.video.home.title'
     },
     canActivate: [UserRouteAccessService]

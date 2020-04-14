@@ -17,7 +17,8 @@
         "title": "Video"
       },
       "titre": "Titre",
-      "contenu": "Contenu"
+      "contenu": "Contenu",
+      "cours": "Cours"
     }
   }
 }

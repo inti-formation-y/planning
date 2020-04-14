@@ -6,11 +6,13 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
+import { JhiDataUtils, JhiFileLoadError, JhiEventManager, JhiEventWithContent } from 'ng-jhipster';
 
 import { ICours, Cours } from 'app/shared/model/cours.model';
 import { CoursService } from './cours.service';
-import { IEleve } from 'app/shared/model/eleve.model';
-import { EleveService } from 'app/entities/eleve/eleve.service';
+import { AlertError } from 'app/shared/alert/alert-error.model';
+import { IUser } from 'app/core/user/user.model';
+import { UserService } from 'app/core/user/user.service';
 
 @Component({
   selector: 'jhi-cours-update',
@@ -18,18 +20,22 @@ import { EleveService } from 'app/entities/eleve/eleve.service';
 })
 export class CoursUpdateComponent implements OnInit {
   isSaving = false;
-  eleves: IEleve[] = [];
+  users: IUser[] = [];
 
   editForm = this.fb.group({
     id: [],
     titre: [],
+    pdf: [],
+    pdfContentType: [],
     dateAjout: [null, [Validators.required]],
-    eleves: []
+    users: []
   });
 
   constructor(
+    protected dataUtils: JhiDataUtils,
+    protected eventManager: JhiEventManager,
     protected coursService: CoursService,
-    protected eleveService: EleveService,
+    protected userService: UserService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -43,7 +49,7 @@ export class CoursUpdateComponent implements OnInit {
 
       this.updateForm(cours);
 
-      this.eleveService.query().subscribe((res: HttpResponse<IEleve[]>) => (this.eleves = res.body || []));
+      this.userService.query().subscribe((res: HttpResponse<IUser[]>) => (this.users = res.body || []));
     });
   }
 
@@ -51,8 +57,26 @@ export class CoursUpdateComponent implements OnInit {
     this.editForm.patchValue({
       id: cours.id,
       titre: cours.titre,
+      pdf: cours.pdf,
+      pdfContentType: cours.pdfContentType,
       dateAjout: cours.dateAjout ? cours.dateAjout.format(DATE_TIME_FORMAT) : null,
-      eleves: cours.eleves
+      users: cours.users
+    });
+  }
+
+  byteSize(base64String: string): string {
+    return this.dataUtils.byteSize(base64String);
+  }
+
+  openFile(contentType: string, base64String: string): void {
+    this.dataUtils.openFile(contentType, base64String);
+  }
+
+  setFileData(event: Event, field: string, isImage: boolean): void {
+    this.dataUtils.loadFileToForm(event, this.editForm, field, isImage).subscribe(null, (err: JhiFileLoadError) => {
+      this.eventManager.broadcast(
+        new JhiEventWithContent<AlertError>('planningApp.error', { ...err, key: 'error.file.' + err.key })
+      );
     });
   }
 
@@ -75,8 +99,10 @@ export class CoursUpdateComponent implements OnInit {
       ...new Cours(),
       id: this.editForm.get(['id'])!.value,
       titre: this.editForm.get(['titre'])!.value,
+      pdfContentType: this.editForm.get(['pdfContentType'])!.value,
+      pdf: this.editForm.get(['pdf'])!.value,
       dateAjout: this.editForm.get(['dateAjout'])!.value ? moment(this.editForm.get(['dateAjout'])!.value, DATE_TIME_FORMAT) : undefined,
-      eleves: this.editForm.get(['eleves'])!.value
+      users: this.editForm.get(['users'])!.value
     };
   }
 
@@ -96,11 +122,11 @@ export class CoursUpdateComponent implements OnInit {
     this.isSaving = false;
   }
 
-  trackById(index: number, item: IEleve): any {
+  trackById(index: number, item: IUser): any {
     return item.id;
   }
 
-  getSelected(selectedVals: IEleve[], option: IEleve): IEleve {
+  getSelected(selectedVals: IUser[], option: IUser): IUser {
     if (selectedVals) {
       for (let i = 0; i < selectedVals.length; i++) {
         if (option.id === selectedVals[i].id) {

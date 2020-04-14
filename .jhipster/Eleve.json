@@ -33,17 +33,20 @@
         {
             "fieldName": "classe",
             "fieldType": "Classe",
-            "fieldValues": "CP,CE1,CE2,CM1,CM2"
+            "fieldValues": "CP,CE1,CE2,CM1,CM2",
+            "fieldValidateRules": [
+                "required"
+            ]
         }
     ],
     "relationships": [
         {
-            "relationshipType": "many-to-many",
-            "otherEntityName": "cours",
+            "relationshipType": "one-to-one",
+            "otherEntityName": "user",
             "otherEntityRelationshipName": "eleve",
-            "relationshipName": "cours",
-            "otherEntityField": "titre",
-            "ownerSide": false
+            "relationshipName": "user",
+            "otherEntityField": "login",
+            "ownerSide": true
         }
     ],
     "changelogDate": "20200319012200",
@@ -55,5 +58,6 @@
     "fluentMethods": true,
     "readOnly": false,
     "clientRootFolder": "",
-    "applications": "*"
+    "applications": "*",
+    "embedded": false
 }

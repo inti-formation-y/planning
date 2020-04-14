@@ -9,6 +9,8 @@ import { JhiDataUtils, JhiFileLoadError, JhiEventManager, JhiEventWithContent } 
 import { IVideo, Video } from 'app/shared/model/video.model';
 import { VideoService } from './video.service';
 import { AlertError } from 'app/shared/alert/alert-error.model';
+import { ICours } from 'app/shared/model/cours.model';
+import { CoursService } from 'app/entities/cours/cours.service';
 
 @Component({
   selector: 'jhi-video-update',
@@ -16,18 +18,21 @@ import { AlertError } from 'app/shared/alert/alert-error.model';
 })
 export class VideoUpdateComponent implements OnInit {
   isSaving = false;
+  cours: ICours[] = [];
 
   editForm = this.fb.group({
     id: [],
     titre: [],
     contenu: [],
-    contenuContentType: []
+    contenuContentType: [],
+    cours: []
   });
 
   constructor(
     protected dataUtils: JhiDataUtils,
     protected eventManager: JhiEventManager,
     protected videoService: VideoService,
+    protected coursService: CoursService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -35,6 +40,8 @@ export class VideoUpdateComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ video }) => {
       this.updateForm(video);
+
+      this.coursService.query().subscribe((res: HttpResponse<ICours[]>) => (this.cours = res.body || []));
     });
   }
 
@@ -43,7 +50,8 @@ export class VideoUpdateComponent implements OnInit {
       id: video.id,
       titre: video.titre,
       contenu: video.contenu,
-      contenuContentType: video.contenuContentType
+      contenuContentType: video.contenuContentType,
+      cours: video.cours
     });
   }
 
@@ -83,7 +91,8 @@ export class VideoUpdateComponent implements OnInit {
       id: this.editForm.get(['id'])!.value,
       titre: this.editForm.get(['titre'])!.value,
       contenuContentType: this.editForm.get(['contenuContentType'])!.value,
-      contenu: this.editForm.get(['contenu'])!.value
+      contenu: this.editForm.get(['contenu'])!.value,
+      cours: this.editForm.get(['cours'])!.value
     };
   }
 
@@ -101,5 +110,9 @@ export class VideoUpdateComponent implements OnInit {
 
   protected onSaveError(): void {
     this.isSaving = false;
+  }
+
+  trackById(index: number, item: ICours): any {
+    return item.id;
   }
 }

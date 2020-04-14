@@ -1,0 +1,10 @@
+.img{
+	width : 180px;
+	padding: 15px;
+}
+.pricing-entry .desc {
+    width: calc(100% - 180px);
+}
+.p-4 {
+    padding: 1.5rem !important;
+}

@@ -1,6 +1,7 @@
 
 entity Cours {
 	titre String,
+	pdf Blob,
     DateAjout ZonedDateTime required
 }
 entity Video {
@@ -19,13 +20,18 @@ entity Eleve {
     email String,
 	mobile String,
 	dateNaissance Instant,
-    classe Classe
+    classe Classe required
 }
 
+relationship ManyToOne {
+	Video{cours(titre)} to Cours	
+}
 relationship ManyToMany {
-	Cours{eleve(nom)} to Eleve{cours(titre)}
+	Cours{user(login)} to User{cours(titre)}	
 }
-
+relationship OneToOne {
+	Eleve{user(login)} to User
+}
 
 // Set pagination options
 paginate Cours, Eleve with infinite-scroll

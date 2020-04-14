@@ -19,6 +19,12 @@
             <column name="titre" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="pdf" type="longblob">
+                <constraints nullable="true" />
+            </column>
+            <column name="pdf_content_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
             <column name="date_ajout" type="datetime">
                 <constraints nullable="false" />
             </column>
@@ -29,8 +35,8 @@
 
     <changeSet id="20200319012000-1-relations" author="jhipster">
 
-        <createTable tableName="cours_eleve">
-            <column name="eleve_id" type="bigint">
+        <createTable tableName="cours_user">
+            <column name="user_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
             <column name="cours_id" type="bigint">
@@ -38,7 +44,7 @@
             </column>
         </createTable>
 
-        <addPrimaryKey columnNames="cours_id, eleve_id" tableName="cours_eleve"/>
+        <addPrimaryKey columnNames="cours_id, user_id" tableName="cours_user"/>
         
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
@@ -58,6 +64,8 @@
                   tableName="cours">
             <column name="id" type="numeric"/>
             <column name="titre" type="string"/>
+            <column name="pdf" type="blob"/>
+            <column name="pdf_content_type" type="string"/>
             <column name="date_ajout" type="datetime"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->
         </loadData>

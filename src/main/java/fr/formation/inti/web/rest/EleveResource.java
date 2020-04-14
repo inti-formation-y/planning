@@ -1,14 +1,18 @@
 package fr.formation.inti.web.rest;
 
 import fr.formation.inti.domain.Eleve;
+import fr.formation.inti.domain.User;
 import fr.formation.inti.repository.EleveRepository;
+import fr.formation.inti.service.MailService;
+import fr.formation.inti.service.UserService;
 import fr.formation.inti.web.rest.errors.BadRequestAlertException;
-
+import fr.formation.inti.web.rest.vm.ManagedUserVM;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -35,7 +40,13 @@ public class EleveResource {
     private final Logger log = LoggerFactory.getLogger(EleveResource.class);
 
     private static final String ENTITY_NAME = "eleve";
-
+    
+    @Autowired
+    private UserService userService;
+    
+    @Autowired
+    private MailService mailService;
+    
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
@@ -53,12 +64,19 @@ public class EleveResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/eleves")
-    public ResponseEntity<Eleve> createEleve(@RequestBody Eleve eleve) throws URISyntaxException {
+    public ResponseEntity<Eleve> createEleve(@Valid @RequestBody Eleve eleve) throws URISyntaxException {
         log.debug("REST request to save Eleve : {}", eleve);
         if (eleve.getId() != null) {
             throw new BadRequestAlertException("A new eleve cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Eleve result = eleveRepository.save(eleve);
+        ManagedUserVM managedUserVM = new ManagedUserVM();
+        managedUserVM.setLogin(ENTITY_NAME.toUpperCase()+result.getId());
+        managedUserVM.setEmail(result.getEmail());
+        managedUserVM.setLangKey("fr");
+        managedUserVM.setPassword("123456");
+        User user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
+        mailService.sendActivationEmail(user);
         return ResponseEntity.created(new URI("/api/eleves/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -74,7 +92,7 @@ public class EleveResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/eleves")
-    public ResponseEntity<Eleve> updateEleve(@RequestBody Eleve eleve) throws URISyntaxException {
+    public ResponseEntity<Eleve> updateEleve(@Valid @RequestBody Eleve eleve) throws URISyntaxException {
         log.debug("REST request to update Eleve : {}", eleve);
         if (eleve.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

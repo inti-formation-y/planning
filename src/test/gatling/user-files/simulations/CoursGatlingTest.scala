@@ -73,6 +73,7 @@ class CoursGatlingTest extends Simulation {
             .body(StringBody("""{
                 "id":null
                 , "titre":"SAMPLE_TEXT"
+                , "pdf":null
                 , "dateAjout":"2020-01-01T00:00:00.000Z"
                 }""")).asJson
             .check(status.is(201))

@@ -6,6 +6,11 @@
             "fieldType": "String"
         },
         {
+            "fieldName": "pdf",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "any"
+        },
+        {
             "fieldName": "dateAjout",
             "fieldType": "ZonedDateTime",
             "fieldValidateRules": [
@@ -16,10 +21,10 @@
     "relationships": [
         {
             "relationshipType": "many-to-many",
-            "otherEntityName": "eleve",
+            "otherEntityName": "user",
             "otherEntityRelationshipName": "cours",
-            "relationshipName": "eleve",
-            "otherEntityField": "nom",
+            "relationshipName": "user",
+            "otherEntityField": "login",
             "ownerSide": true
         }
     ],
@@ -32,5 +37,6 @@
     "fluentMethods": true,
     "readOnly": false,
     "clientRootFolder": "",
-    "applications": "*"
+    "applications": "*",
+    "embedded": false
 }

@@ -18,6 +18,25 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="planningApp.cours.pdf" for="field_pdf">Pdf</label>
+                    <div>
+                        <div *ngIf="editForm.get('pdf')!.value" class="form-text text-danger clearfix">
+                            <a class="pull-left" (click)="openFile(editForm.get('pdfContentType')!.value, editForm.get('pdf')!.value)" jhiTranslate="entity.action.open">open</a><br>
+                            <span class="pull-left">{{ editForm.get('pdfContentType')!.value }}, {{ byteSize(editForm.get('pdf')!.value) }}</span>
+                            <button type="button" (click)="editForm.patchValue({pdf: null});editForm.patchValue({pdfContentType: null});"
+                                    class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon icon="times"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_pdf" (change)="setFileData($event, 'pdf', false)" jhiTranslate="entity.action.addblob"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="pdf" id="field_pdf"
+                           formControlName="pdf"/>
+                    <input type="hidden" class="form-control" name="pdfContentType" id="field_pdfContentType"
+                           formControlName="pdfContentType" />
+                </div>
+
+                <div class="form-group">
                     <label class="form-control-label" jhiTranslate="planningApp.cours.dateAjout" for="field_dateAjout">Date Ajout</label>
                     <div class="d-flex">
                         <input id="field_dateAjout" type="datetime-local" class="form-control" name="dateAjout" formControlName="dateAjout" placeholder="YYYY-MM-DD HH:mm"/>
@@ -35,9 +54,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label jhiTranslate="planningApp.cours.eleve" for="field_eleves">Eleve</label>
-                    <select class="form-control" id="field_eleves" multiple name="eleves" formControlName="eleves">
-                        <option [ngValue]="getSelected(editForm.get('eleves')!.value, eleveOption)" *ngFor="let eleveOption of eleves; trackBy: trackById">{{ eleveOption.nom }}</option>
+                    <label jhiTranslate="planningApp.cours.user" for="field_users">User</label>
+                    <select class="form-control" id="field_users" multiple name="users" formControlName="users">
+                        <option [ngValue]="getSelected(editForm.get('users')!.value, userOption)" *ngFor="let userOption of users; trackBy: trackById">{{ userOption.login }}</option>
                     </select>
                 </div>
             </div>

@@ -100,7 +100,7 @@ public class CoursResource {
         if (eagerload) {
             page = coursRepository.findAllWithEagerRelationships(pageable);
         } else {
-            page = coursRepository.findAll(pageable);
+            page = coursRepository.findByUserIsCurrentUser(pageable);
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());

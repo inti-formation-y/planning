@@ -45,6 +45,10 @@
                 <dd>
                     <span jhiTranslate="{{ 'planningApp.Classe.' + eleve.classe }}">{{ eleve.classe }}</span>
                 </dd>
+                <dt><span jhiTranslate="planningApp.eleve.user">User</span></dt>
+                <dd>
+                    {{ eleve.user?.login }}
+                </dd>
             </dl>
 
             <button type="submit"

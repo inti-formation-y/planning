@@ -1,5 +1,6 @@
 package fr.formation.inti.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -31,6 +32,10 @@ public class Video implements Serializable {
 
     @Column(name = "contenu_content_type")
     private String contenuContentType;
+
+    @ManyToOne
+    @JsonIgnoreProperties("videos")
+    private Cours cours;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -78,6 +83,19 @@ public class Video implements Serializable {
 
     public void setContenuContentType(String contenuContentType) {
         this.contenuContentType = contenuContentType;
+    }
+
+    public Cours getCours() {
+        return cours;
+    }
+
+    public Video cours(Cours cours) {
+        this.cours = cours;
+        return this;
+    }
+
+    public void setCours(Cours cours) {
+        this.cours = cours;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

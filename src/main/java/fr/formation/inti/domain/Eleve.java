@@ -1,16 +1,14 @@
 package fr.formation.inti.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.util.Objects;
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Set;
 
 import fr.formation.inti.domain.enumeration.Classe;
 
@@ -53,14 +51,14 @@ public class Eleve implements Serializable {
     @Column(name = "date_naissance")
     private Instant dateNaissance;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "classe")
+    @Column(name = "classe", nullable = false)
     private Classe classe;
 
-    @ManyToMany(mappedBy = "eleves")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @JsonIgnore
-    private Set<Cours> cours = new HashSet<>();
+    @OneToOne
+    @JoinColumn(unique = true)
+    private User user;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -188,29 +186,17 @@ public class Eleve implements Serializable {
         this.classe = classe;
     }
 
-    public Set<Cours> getCours() {
-        return cours;
+    public User getUser() {
+        return user;
     }
 
-    public Eleve cours(Set<Cours> cours) {
-        this.cours = cours;
+    public Eleve user(User user) {
+        this.user = user;
         return this;
     }
 
-    public Eleve addCours(Cours cours) {
-        this.cours.add(cours);
-        cours.getEleves().add(this);
-        return this;
-    }
-
-    public Eleve removeCours(Cours cours) {
-        this.cours.remove(cours);
-        cours.getEleves().remove(this);
-        return this;
-    }
-
-    public void setCours(Set<Cours> cours) {
-        this.cours = cours;
+    public void setUser(User user) {
+        this.user = user;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

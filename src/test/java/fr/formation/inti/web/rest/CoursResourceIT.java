@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 import javax.persistence.EntityManager;
 import java.time.Instant;
 import java.time.ZonedDateTime;
@@ -45,6 +46,11 @@ public class CoursResourceIT {
     private static final String DEFAULT_TITRE = "AAAAAAAAAA";
     private static final String UPDATED_TITRE = "BBBBBBBBBB";
 
+    private static final byte[] DEFAULT_PDF = TestUtil.createByteArray(1, "0");
+    private static final byte[] UPDATED_PDF = TestUtil.createByteArray(1, "1");
+    private static final String DEFAULT_PDF_CONTENT_TYPE = "image/jpg";
+    private static final String UPDATED_PDF_CONTENT_TYPE = "image/png";
+
     private static final ZonedDateTime DEFAULT_DATE_AJOUT = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_DATE_AJOUT = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
@@ -71,6 +77,8 @@ public class CoursResourceIT {
     public static Cours createEntity(EntityManager em) {
         Cours cours = new Cours()
             .titre(DEFAULT_TITRE)
+            .pdf(DEFAULT_PDF)
+            .pdfContentType(DEFAULT_PDF_CONTENT_TYPE)
             .dateAjout(DEFAULT_DATE_AJOUT);
         return cours;
     }
@@ -83,6 +91,8 @@ public class CoursResourceIT {
     public static Cours createUpdatedEntity(EntityManager em) {
         Cours cours = new Cours()
             .titre(UPDATED_TITRE)
+            .pdf(UPDATED_PDF)
+            .pdfContentType(UPDATED_PDF_CONTENT_TYPE)
             .dateAjout(UPDATED_DATE_AJOUT);
         return cours;
     }
@@ -108,6 +118,8 @@ public class CoursResourceIT {
         assertThat(coursList).hasSize(databaseSizeBeforeCreate + 1);
         Cours testCours = coursList.get(coursList.size() - 1);
         assertThat(testCours.getTitre()).isEqualTo(DEFAULT_TITRE);
+        assertThat(testCours.getPdf()).isEqualTo(DEFAULT_PDF);
+        assertThat(testCours.getPdfContentType()).isEqualTo(DEFAULT_PDF_CONTENT_TYPE);
         assertThat(testCours.getDateAjout()).isEqualTo(DEFAULT_DATE_AJOUT);
     }
 
@@ -161,6 +173,8 @@ public class CoursResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(cours.getId().intValue())))
             .andExpect(jsonPath("$.[*].titre").value(hasItem(DEFAULT_TITRE)))
+            .andExpect(jsonPath("$.[*].pdfContentType").value(hasItem(DEFAULT_PDF_CONTENT_TYPE)))
+            .andExpect(jsonPath("$.[*].pdf").value(hasItem(Base64Utils.encodeToString(DEFAULT_PDF))))
             .andExpect(jsonPath("$.[*].dateAjout").value(hasItem(sameInstant(DEFAULT_DATE_AJOUT))));
     }
     
@@ -198,6 +212,8 @@ public class CoursResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(cours.getId().intValue()))
             .andExpect(jsonPath("$.titre").value(DEFAULT_TITRE))
+            .andExpect(jsonPath("$.pdfContentType").value(DEFAULT_PDF_CONTENT_TYPE))
+            .andExpect(jsonPath("$.pdf").value(Base64Utils.encodeToString(DEFAULT_PDF)))
             .andExpect(jsonPath("$.dateAjout").value(sameInstant(DEFAULT_DATE_AJOUT)));
     }
 
@@ -223,6 +239,8 @@ public class CoursResourceIT {
         em.detach(updatedCours);
         updatedCours
             .titre(UPDATED_TITRE)
+            .pdf(UPDATED_PDF)
+            .pdfContentType(UPDATED_PDF_CONTENT_TYPE)
             .dateAjout(UPDATED_DATE_AJOUT);
 
         restCoursMockMvc.perform(put("/api/cours")
@@ -235,6 +253,8 @@ public class CoursResourceIT {
         assertThat(coursList).hasSize(databaseSizeBeforeUpdate);
         Cours testCours = coursList.get(coursList.size() - 1);
         assertThat(testCours.getTitre()).isEqualTo(UPDATED_TITRE);
+        assertThat(testCours.getPdf()).isEqualTo(UPDATED_PDF);
+        assertThat(testCours.getPdfContentType()).isEqualTo(UPDATED_PDF_CONTENT_TYPE);
         assertThat(testCours.getDateAjout()).isEqualTo(UPDATED_DATE_AJOUT);
     }
 

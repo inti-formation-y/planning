@@ -1,37 +1,69 @@
 <div class="row justify-content-center">
-    <div class="col-8">
-        <div *ngIf="video">
-            <h2><span jhiTranslate="planningApp.video.detail.title">Video</span> {{ video.id }}</h2>
+	<div class="col-8">
+		<div *ngIf="video">
+			<h2>
+				<span jhiTranslate="planningApp.video.detail.title">Video</span> {{
+				video.id }}
+			</h2>
 
-            <hr>
+			<hr>
 
-            <jhi-alert-error></jhi-alert-error>
+			<jhi-alert-error></jhi-alert-error>
 
-            <dl class="row-md jh-entity-details">
-                <dt><span jhiTranslate="planningApp.video.titre">Titre</span></dt>
-                <dd>
-                    <span>{{ video.titre }}</span>
-                </dd>
-                <dt><span jhiTranslate="planningApp.video.contenu">Contenu</span></dt>
-                <dd>
-                    <div *ngIf="video.contenu">
-                        <a (click)="openFile(video?.contenuContentType!, video?.contenu)" jhiTranslate="entity.action.open">open</a>
-                        {{ video.contenuContentType }}, {{ byteSize(video.contenu) }}
-                    </div>
-                </dd>
-            </dl>
+			<dl class="row-md jh-entity-details">
+				<dt>
+					<span jhiTranslate="planningApp.video.titre">Titre</span>
+				</dt>
+				<dd>
+					<span>{{ video.titre }}</span>
+				</dd>
+				<dt>
+					<span jhiTranslate="planningApp.video.contenu">Contenu</span>
+				</dt>
+				<dd>
+					<div *ngIf="video.contenu">
+						<a (click)="openFile(video?.contenuContentType!, video?.contenu)"
+							jhiTranslate="entity.action.open">open</a> {{
+						video.contenuContentType }}, {{ byteSize(video.contenu) }}
+					</div>
+				</dd>
+				<dt>
+					<span jhiTranslate="planningApp.video.cours">Cours</span>
+				</dt>
+				<dd>
+					<div *ngIf="video.cours">
+						<!--<a [routerLink]="['/cours', video.cours?.id, 'view']">{{
+							video.cours?.titre }}</a>
+						  -->
+						<video 
+							width="440px" id="singleVideo" preload="auto" controls>
+							<source
+								src="http://static.videogular.com/assets/videos/videogular.mp4"
+								type="video/mp4">
+							<source
+								src="http://static.videogular.com/assets/videos/videogular.ogg"
+								type="video/ogg">
+							<source
+								src="http://static.videogular.com/assets/videos/videogular.webm"
+								type="video/webm">
+						</video> 
+						<!--  -->
+					</div>
+				</dd>
+			</dl>
 
-            <button type="submit"
-                    (click)="previousState()"
-                    class="btn btn-info">
-                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
-            </button>
+			<button type="submit" (click)="previousState()" class="btn btn-info">
+				<fa-icon icon="arrow-left"></fa-icon>
+				&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+			</button>
 
-            <button type="button"
-                    [routerLink]="['/video', video.id, 'edit']"
-                    class="btn btn-primary">
-                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
-            </button>
-        </div>
-    </div>
+			<button type="button" [routerLink]="['/video', video.id, 'edit']"
+				class="btn btn-primary">
+				<fa-icon icon="pencil-alt"></fa-icon>
+				&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+			</button>
+		</div>
+
+
+	</div>
 </div>

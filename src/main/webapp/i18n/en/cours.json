@@ -17,8 +17,9 @@
         "title": "Cours"
       },
       "titre": "Titre",
+      "pdf": "Pdf",
       "dateAjout": "Date Ajout",
-      "eleve": "Eleve"
+      "user": "User"
     }
   }
 }

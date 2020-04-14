@@ -12,14 +12,21 @@
                 <dd>
                     <span>{{ cours.titre }}</span>
                 </dd>
+                <dt><span jhiTranslate="planningApp.cours.pdf">Pdf</span></dt>
+                <dd>
+                    <div *ngIf="cours.pdf">
+                        <a (click)="openFile(cours?.pdfContentType!, cours?.pdf)" jhiTranslate="entity.action.open">open</a>
+                        {{ cours.pdfContentType }}, {{ byteSize(cours.pdf) }}
+                    </div>
+                </dd>
                 <dt><span jhiTranslate="planningApp.cours.dateAjout">Date Ajout</span></dt>
                 <dd>
                     <span>{{ cours.dateAjout }}</span>
                 </dd>
-                <dt><span jhiTranslate="planningApp.cours.eleve">Eleve</span></dt>
+                <dt><span jhiTranslate="planningApp.cours.user">User</span></dt>
                 <dd>
-                    <span *ngFor="let eleve of cours.eleves; let last = last">
-                        <a [routerLink]="['/eleve', eleve?.id, 'view']">{{ eleve.nom }}</a>{{ last ? '' : ', ' }}
+                    <span *ngFor="let user of cours.users; let last = last">
+                        {{ user.login }}{{ last ? '' : ', ' }}
                     </span>
                 </dd>
             </dl>
@@ -30,7 +37,7 @@
                 <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
             </button>
 
-            <button type="button"
+            <button type="button" *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_USER']"
                     [routerLink]="['/cours', cours.id, 'edit']"
                     class="btn btn-primary">
                 <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>

@@ -31,6 +31,7 @@
                     <th scope="col"  jhiSortBy="mobile"><span jhiTranslate="planningApp.eleve.mobile">Mobile</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="dateNaissance"><span jhiTranslate="planningApp.eleve.dateNaissance">Date Naissance</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="classe"><span jhiTranslate="planningApp.eleve.classe">Classe</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="user.login"><span jhiTranslate="planningApp.eleve.user">User</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -50,6 +51,9 @@
                     <td>{{ eleve.mobile }}</td>
                     <td>{{ eleve.dateNaissance | date:'medium' }}</td>
                     <td jhiTranslate="{{ 'planningApp.Classe.' + eleve.classe }}">{{ eleve.classe }}</td>
+                    <td>
+                        {{ eleve.user?.login }}
+                    </td>
                     <td class="text-right">
                         <div class="btn-group">
                             <button type="submit"

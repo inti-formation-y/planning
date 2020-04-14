@@ -11,7 +11,15 @@
             "fieldTypeBlobContent": "any"
         }
     ],
-    "relationships": [],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "cours",
+            "otherEntityRelationshipName": "video",
+            "relationshipName": "cours",
+            "otherEntityField": "titre"
+        }
+    ],
     "changelogDate": "20200319012100",
     "entityTableName": "video",
     "dto": "no",
@@ -21,5 +29,6 @@
     "fluentMethods": true,
     "readOnly": false,
     "clientRootFolder": "",
-    "applications": "*"
+    "applications": "*",
+    "embedded": false
 }

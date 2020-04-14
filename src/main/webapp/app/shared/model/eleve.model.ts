@@ -1,5 +1,5 @@
 import { Moment } from 'moment';
-import { ICours } from 'app/shared/model/cours.model';
+import { IUser } from 'app/core/user/user.model';
 import { Classe } from 'app/shared/model/enumerations/classe.model';
 
 export interface IEleve {
@@ -13,7 +13,7 @@ export interface IEleve {
   mobile?: string;
   dateNaissance?: Moment;
   classe?: Classe;
-  cours?: ICours[];
+  user?: IUser;
 }
 
 export class Eleve implements IEleve {
@@ -28,6 +28,6 @@ export class Eleve implements IEleve {
     public mobile?: string,
     public dateNaissance?: Moment,
     public classe?: Classe,
-    public cours?: ICours[]
+    public user?: IUser
   ) {}
 }

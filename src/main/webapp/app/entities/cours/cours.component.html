@@ -2,7 +2,7 @@
     <h2 id="page-heading">
         <span jhiTranslate="planningApp.cours.home.title">Cours</span>
 
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-cours" [routerLink]="['/cours/new']">
+        <button *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_USER']" id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-cours" [routerLink]="['/cours/new']">
             <fa-icon icon="plus"></fa-icon>
             <span  jhiTranslate="planningApp.cours.home.createLabel">
             Create a new Cours
@@ -24,16 +24,21 @@
                 <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
                     <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="titre"><span jhiTranslate="planningApp.cours.titre">Titre</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="pdf"><span jhiTranslate="planningApp.cours.pdf">Pdf</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="dateAjout"><span jhiTranslate="planningApp.cours.dateAjout">Date Ajout</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"></th>
+                    <th scope="col" *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_USER']"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let cours of cours ;trackBy: trackId">
                     <td><a [routerLink]="['/cours', cours.id, 'view']">{{ cours.id }}</a></td>
                     <td>{{ cours.titre }}</td>
+                    <td>
+                        <a *ngIf="cours.pdf" (click)="openFile(cours.pdfContentType, cours.pdf)" jhiTranslate="entity.action.open">open</a>
+                        <span *ngIf="cours.pdf">{{ cours.pdfContentType }}, {{ byteSize(cours.pdf) }}</span>
+                    </td>
                     <td>{{ cours.dateAjout | date:'medium' }}</td>
-                    <td class="text-right">
+                    <td class="text-right" *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_USER']">
                         <div class="btn-group">
                             <button type="submit"
                                     [routerLink]="['/cours', cours.id, 'view']"

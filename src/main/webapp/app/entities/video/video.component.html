@@ -2,7 +2,7 @@
     <h2 id="page-heading">
         <span jhiTranslate="planningApp.video.home.title">Videos</span>
 
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-video" [routerLink]="['/video/new']">
+        <button *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_USER']" id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-video" [routerLink]="['/video/new']">
             <fa-icon icon="plus"></fa-icon>
             <span  jhiTranslate="planningApp.video.home.createLabel">
             Create a new Video
@@ -25,7 +25,8 @@
                     <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
                     <th scope="col" ><span jhiTranslate="planningApp.video.titre">Titre</span></th>
                     <th scope="col" ><span jhiTranslate="planningApp.video.contenu">Contenu</span></th>
-                    <th scope="col"></th>
+                    <th scope="col" ><span jhiTranslate="planningApp.video.cours">Cours</span></th>
+                    <th scope="col" *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_USER']"></th>
                 </tr>
             </thead>
             <tbody>
@@ -36,7 +37,12 @@
                         <a *ngIf="video.contenu" (click)="openFile(video.contenuContentType, video.contenu)" jhiTranslate="entity.action.open">open</a>
                         <span *ngIf="video.contenu">{{ video.contenuContentType }}, {{ byteSize(video.contenu) }}</span>
                     </td>
-                    <td class="text-right">
+                    <td>
+                        <div *ngIf="video.cours">
+                            <a [routerLink]="['/cours', video.cours?.id, 'view']" >{{ video.cours?.titre }}</a>
+                        </div>
+                    </td>
+                    <td class="text-right" *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_USER']">
                         <div class="btn-group">
                             <button type="submit"
                                     [routerLink]="['/video', video.id, 'view']"

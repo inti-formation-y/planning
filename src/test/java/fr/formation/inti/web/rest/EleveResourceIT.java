@@ -163,6 +163,24 @@ public class EleveResourceIT {
 
     @Test
     @Transactional
+    public void checkClasseIsRequired() throws Exception {
+        int databaseSizeBeforeTest = eleveRepository.findAll().size();
+        // set the field null
+        eleve.setClasse(null);
+
+        // Create the Eleve, which fails.
+
+        restEleveMockMvc.perform(post("/api/eleves")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(eleve)))
+            .andExpect(status().isBadRequest());
+
+        List<Eleve> eleveList = eleveRepository.findAll();
+        assertThat(eleveList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllEleves() throws Exception {
         // Initialize the database
         eleveRepository.saveAndFlush(eleve);

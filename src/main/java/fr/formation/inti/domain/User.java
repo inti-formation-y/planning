@@ -32,6 +32,9 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    
+    
 
     @NotNull
     @Pattern(regexp = Constants.LOGIN_REGEX)
@@ -198,8 +201,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
     public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
     }
+    
 
-    @Override
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

@@ -11,6 +11,8 @@ import { JhiDataUtils, JhiFileLoadError, JhiEventManager, JhiEventWithContent } 
 import { IEleve, Eleve } from 'app/shared/model/eleve.model';
 import { EleveService } from './eleve.service';
 import { AlertError } from 'app/shared/alert/alert-error.model';
+import { IUser } from 'app/core/user/user.model';
+import { UserService } from 'app/core/user/user.service';
 
 @Component({
   selector: 'jhi-eleve-update',
@@ -18,6 +20,7 @@ import { AlertError } from 'app/shared/alert/alert-error.model';
 })
 export class EleveUpdateComponent implements OnInit {
   isSaving = false;
+  users: IUser[] = [];
 
   editForm = this.fb.group({
     id: [],
@@ -29,13 +32,15 @@ export class EleveUpdateComponent implements OnInit {
     email: [],
     mobile: [],
     dateNaissance: [],
-    classe: []
+    classe: [null, [Validators.required]],
+    user: []
   });
 
   constructor(
     protected dataUtils: JhiDataUtils,
     protected eventManager: JhiEventManager,
     protected eleveService: EleveService,
+    protected userService: UserService,
     protected elementRef: ElementRef,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
@@ -49,6 +54,8 @@ export class EleveUpdateComponent implements OnInit {
       }
 
       this.updateForm(eleve);
+
+      this.userService.query().subscribe((res: HttpResponse<IUser[]>) => (this.users = res.body || []));
     });
   }
 
@@ -63,7 +70,8 @@ export class EleveUpdateComponent implements OnInit {
       email: eleve.email,
       mobile: eleve.mobile,
       dateNaissance: eleve.dateNaissance ? eleve.dateNaissance.format(DATE_TIME_FORMAT) : null,
-      classe: eleve.classe
+      classe: eleve.classe,
+      user: eleve.user
     });
   }
 
@@ -121,7 +129,8 @@ export class EleveUpdateComponent implements OnInit {
       dateNaissance: this.editForm.get(['dateNaissance'])!.value
         ? moment(this.editForm.get(['dateNaissance'])!.value, DATE_TIME_FORMAT)
         : undefined,
-      classe: this.editForm.get(['classe'])!.value
+      classe: this.editForm.get(['classe'])!.value,
+      user: this.editForm.get(['user'])!.value
     };
   }
 
@@ -139,5 +148,9 @@ export class EleveUpdateComponent implements OnInit {
 
   protected onSaveError(): void {
     this.isSaving = false;
+  }
+
+  trackById(index: number, item: IUser): any {
+    return item.id;
   }
 }

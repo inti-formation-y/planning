@@ -35,6 +35,14 @@
                     <input type="hidden" class="form-control" name="contenuContentType" id="field_contenuContentType"
                            formControlName="contenuContentType" />
                 </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="planningApp.video.cours" for="field_cours">Cours</label>
+                    <select class="form-control" id="field_cours" name="cours" formControlName="cours">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="coursOption.id === editForm.get('cours')!.value?.id ? editForm.get('cours')!.value : coursOption" *ngFor="let coursOption of cours; trackBy: trackById">{{ coursOption.titre }}</option>
+                    </select>
+                </div>
             </div>
 
             <div>

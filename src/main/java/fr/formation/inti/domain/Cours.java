@@ -29,16 +29,23 @@ public class Cours implements Serializable {
     @Column(name = "titre")
     private String titre;
 
+    @Lob
+    @Column(name = "pdf")
+    private byte[] pdf;
+
+    @Column(name = "pdf_content_type")
+    private String pdfContentType;
+
     @NotNull
     @Column(name = "date_ajout", nullable = false)
     private ZonedDateTime dateAjout;
 
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @JoinTable(name = "cours_eleve",
+    @JoinTable(name = "cours_user",
                joinColumns = @JoinColumn(name = "cours_id", referencedColumnName = "id"),
-               inverseJoinColumns = @JoinColumn(name = "eleve_id", referencedColumnName = "id"))
-    private Set<Eleve> eleves = new HashSet<>();
+               inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+    private Set<User> users = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -62,6 +69,32 @@ public class Cours implements Serializable {
         this.titre = titre;
     }
 
+    public byte[] getPdf() {
+        return pdf;
+    }
+
+    public Cours pdf(byte[] pdf) {
+        this.pdf = pdf;
+        return this;
+    }
+
+    public void setPdf(byte[] pdf) {
+        this.pdf = pdf;
+    }
+
+    public String getPdfContentType() {
+        return pdfContentType;
+    }
+
+    public Cours pdfContentType(String pdfContentType) {
+        this.pdfContentType = pdfContentType;
+        return this;
+    }
+
+    public void setPdfContentType(String pdfContentType) {
+        this.pdfContentType = pdfContentType;
+    }
+
     public ZonedDateTime getDateAjout() {
         return dateAjout;
     }
@@ -75,29 +108,27 @@ public class Cours implements Serializable {
         this.dateAjout = dateAjout;
     }
 
-    public Set<Eleve> getEleves() {
-        return eleves;
+    public Set<User> getUsers() {
+        return users;
     }
 
-    public Cours eleves(Set<Eleve> eleves) {
-        this.eleves = eleves;
+    public Cours users(Set<User> users) {
+        this.users = users;
         return this;
     }
 
-    public Cours addEleve(Eleve eleve) {
-        this.eleves.add(eleve);
-        eleve.getCours().add(this);
+    public Cours addUser(User user) {
+        this.users.add(user);
         return this;
     }
 
-    public Cours removeEleve(Eleve eleve) {
-        this.eleves.remove(eleve);
-        eleve.getCours().remove(this);
+    public Cours removeUser(User user) {
+        this.users.remove(user);
         return this;
     }
 
-    public void setEleves(Set<Eleve> eleves) {
-        this.eleves = eleves;
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -122,6 +153,8 @@ public class Cours implements Serializable {
         return "Cours{" +
             "id=" + getId() +
             ", titre='" + getTitre() + "'" +
+            ", pdf='" + getPdf() + "'" +
+            ", pdfContentType='" + getPdfContentType() + "'" +
             ", dateAjout='" + getDateAjout() + "'" +
             "}";
     }

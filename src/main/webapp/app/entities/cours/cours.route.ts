@@ -43,7 +43,7 @@ export const coursRoute: Routes = [
       pagingParams: JhiResolvePagingParams
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.USER,Authority.ELEVE],
       defaultSort: 'id,asc',
       pageTitle: 'planningApp.cours.home.title'
     },
@@ -56,7 +56,7 @@ export const coursRoute: Routes = [
       cours: CoursResolve
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.USER,Authority.ELEVE],
       pageTitle: 'planningApp.cours.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -68,7 +68,7 @@ export const coursRoute: Routes = [
       cours: CoursResolve
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.USER,Authority.ELEVE],
       pageTitle: 'planningApp.cours.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -80,7 +80,7 @@ export const coursRoute: Routes = [
       cours: CoursResolve
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.USER,Authority.ELEVE],
       pageTitle: 'planningApp.cours.home.title'
     },
     canActivate: [UserRouteAccessService]

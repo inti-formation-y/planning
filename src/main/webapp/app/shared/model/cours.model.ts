@@ -1,13 +1,22 @@
 import { Moment } from 'moment';
-import { IEleve } from 'app/shared/model/eleve.model';
+import { IUser } from 'app/core/user/user.model';
 
 export interface ICours {
   id?: number;
   titre?: string;
+  pdfContentType?: string;
+  pdf?: any;
   dateAjout?: Moment;
-  eleves?: IEleve[];
+  users?: IUser[];
 }
 
 export class Cours implements ICours {
-  constructor(public id?: number, public titre?: string, public dateAjout?: Moment, public eleves?: IEleve[]) {}
+  constructor(
+    public id?: number,
+    public titre?: string,
+    public pdfContentType?: string,
+    public pdf?: any,
+    public dateAjout?: Moment,
+    public users?: IUser[]
+  ) {}
 }
